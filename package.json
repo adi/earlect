@@ -1,0 +1,36 @@
+{
+  "name": "earlect",
+  "version": "0.1.0",
+  "description": "Leader Election Generic Implementation for TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' src/main.ts",
+    "build": "tsc",
+    "prod": "node dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adi/earlect.git"
+  },
+  "keywords": [
+    "raft",
+    "typescript",
+    "javascript"
+  ],
+  "author": "Adrian Punga <adrian.punga@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/adi/earlect/issues"
+  },
+  "homepage": "https://github.com/adi/earlect#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "@types/node": "^13.1.6",
+    "ts-nats": "^1.2.4"
+  }
+}
