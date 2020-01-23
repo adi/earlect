@@ -4,7 +4,7 @@
   "description": "Leader Election Generic Implementation for TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' src/main.ts",
+    "dev": "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' --delay 1 src/main.ts | pino-pretty -c -t SYS:standard -i pid,hostname",
     "build": "tsc",
     "prod": "node dist/main.js"
   },
@@ -25,12 +25,15 @@
   "homepage": "https://github.com/adi/earlect#readme",
   "devDependencies": {
     "nodemon": "^2.0.2",
+    "pino-pretty": "^3.5.0",
     "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "typescript": "^3.7.4"
   },
   "dependencies": {
     "@types/node": "^13.1.6",
+    "@types/pino": "^5.15.3",
+    "pino": "^5.16.0",
     "ts-nats": "^1.2.4"
   }
 }

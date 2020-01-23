@@ -11,27 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Client, connect } from "ts-nats";
+import pino from "pino";
+const logger = pino();
 
-async function connectToNATS() {
-    let nc: Client;
-    try {
-        nc = await connect({
-            servers: ["nats://127.0.0.1:4222"],
-        });
-    } catch (e) {
-        // tslint:disable-next-line: no-console
-        console.error(e);
-        process.exit(1);
-    }
-    // tslint:disable-next-line: no-console
-    console.info("Connected to NATS");
-    return nc;
-}
+import { Hall } from "./hall";
+import { Viking } from "./viking";
 
 async function main() {
     try {
-        const nc = await connectToNATS();
+        const hall = await Hall.connect();
+        const viking = await Viking.createInHall(hall);
     } catch (err) {
         throw err;
     }
@@ -42,7 +31,6 @@ main()
         // process.exit(0);
     })
     .catch((err) => {
-        // tslint:disable-next-line: no-console
-        console.error(err);
+        logger.error(err);
         process.exit(1);
     });
