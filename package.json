@@ -1,6 +1,6 @@
 {
   "name": "earlect",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Leader Election Generic Implementation for TypeScript",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,10 @@
     "url": "git+https://github.com/adi/earlect.git"
   },
   "keywords": [
-    "raft",
+    "earl",
+    "viking",
+    "hall",
+    "election",
     "typescript",
     "javascript"
   ],
