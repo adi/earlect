@@ -1,6 +1,6 @@
 import { Client, connect } from "ts-nats";
 
-import { CommunicationMediumError, ICommunicationMedium } from "./comm";
+import { CommunicationMediumError, ICommunicationMedium } from "../";
 
 export class NatsCommunicationMedium implements ICommunicationMedium {
     public static async create(servers: string[]) {
@@ -41,4 +41,3 @@ export class NatsCommunicationMedium implements ICommunicationMedium {
         }, {queue: "NatsCommunicationMedium"});
     }
 }
-

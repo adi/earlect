@@ -4,9 +4,9 @@
   "description": "Leader Election Generic Implementation for TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec ts-nods --delay 1 src/main.ts | pino-pretty -c -t SYS:standard -i pid,hostname",
+    "dev": "nodemon --watch src --ext ts --exec ts-node --delay 1 src/test/main.ts | pino-pretty -c -t SYS:standard -i pid,hostname",
     "build": "tsc",
-    "prod": "node dist/main.js"
+    "prod": "node dist/test/main.js"
   },
   "repository": {
     "type": "git",
@@ -28,12 +28,12 @@
     "pino-pretty": "^3.5.0",
     "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "ts-nats": "^1.2.4"
   },
   "dependencies": {
     "@types/node": "^13.1.6",
     "@types/pino": "^5.15.3",
-    "pino": "^5.16.0",
-    "ts-nats": "^1.2.4"
+    "pino": "^5.16.0"
   }
 }

@@ -1,4 +1,4 @@
-import { ILeaderWatcher } from "./leader_watcher";
+import { ILeaderWatcher } from "../";
 
 import pino from "pino";
 const logger = pino();

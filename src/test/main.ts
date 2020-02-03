@@ -14,10 +14,10 @@
 import pino from "pino";
 const logger = pino();
 
+import { Hall, Viking } from "../";
+
 import { NatsCommunicationMedium } from "./comm_impl";
-import { Hall } from "./hall";
 import { LeaderWatcherLogger } from "./leader_watcher_logger_impl";
-import { Viking } from "./viking";
 
 async function main() {
     try {
