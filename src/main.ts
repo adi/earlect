@@ -14,13 +14,18 @@
 import pino from "pino";
 const logger = pino();
 
+import { NatsCommunicationMedium } from "./comm_impl";
 import { Hall } from "./hall";
+import { LeaderWatcherLogger } from "./leader_watcher_logger_impl";
 import { Viking } from "./viking";
 
 async function main() {
     try {
-        const hall = await Hall.connect();
+        const leaderWatcherLogger = await LeaderWatcherLogger.create();
+        const natsCommunicationMedium = await NatsCommunicationMedium.create(["nats://127.0.0.1:4222"]);
+        const hall = await Hall.create(natsCommunicationMedium);
         const viking = await Viking.createInHall(hall);
+        viking.addLeaderWatcher(leaderWatcherLogger);
     } catch (err) {
         throw err;
     }

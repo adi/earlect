@@ -4,7 +4,7 @@
   "description": "Leader Election Generic Implementation for TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' --delay 1 src/main.ts | pino-pretty -c -t SYS:standard -i pid,hostname",
+    "dev": "nodemon --watch src --ext ts --exec ts-nods --delay 1 src/main.ts | pino-pretty -c -t SYS:standard -i pid,hostname",
     "build": "tsc",
     "prod": "node dist/main.js"
   },

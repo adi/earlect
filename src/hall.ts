@@ -1,7 +1,9 @@
-import { Client, connect } from "ts-nats";
+import { Client, connect, NatsError } from "ts-nats";
 import { Viking } from "./viking";
 
 import pino from "pino";
+import { setImmediate } from "timers";
+import { ICommunicationMedium } from "./comm";
 const logger = pino();
 
 export enum HallMessages {
@@ -20,31 +22,16 @@ export interface IChallenge {
 }
 
 export class Hall {
-
-    public static async connect() {
-        const hall = new Hall();
-        try {
-            hall.natsClient = await connect({
-                servers: ["nats://127.0.0.1:4222"],
-            });
-        } catch (e) {
-            logger.error(e);
-            process.exit(1);
-        }
-        logger.info("Connected to Hall");
+    public static async create(communicationMedium: ICommunicationMedium) {
+        const hall = new Hall(communicationMedium);
         return hall;
     }
 
-    private static CHALLENGES_QUEUE = "challenges";
-
-    private natsClient!: Client;
-
-    private constructor() {
-    }
+    private constructor(private communicationMedium: ICommunicationMedium) {}
 
     public registerViking(viking: Viking) {
         const hall = this;
-        hall.natsClient.subscribe(HallMessages.LEADER_SHOUT, (err, msg) => {
+        hall.communicationMedium.receive(HallMessages.LEADER_SHOUT, (err, msg) => {
             if (err) {
                 hall.receiveCommunicationProblemReport(err);
                 return;
@@ -58,7 +45,7 @@ export class Hall {
             }
             viking.receiveLeaderShout(leaderShout);
         });
-        hall.natsClient.subscribe(HallMessages.CHALLENGE, (err, msg) => {
+        hall.communicationMedium.receiveExclusively(HallMessages.CHALLENGE, (err, msg) => {
             if (err) {
                 hall.receiveCommunicationProblemReport(err);
                 return;
@@ -71,8 +58,8 @@ export class Hall {
                 return;
             }
             viking.receiveChallenge(challenge);
-        }, {queue: Hall.CHALLENGES_QUEUE});
-        hall.natsClient.subscribe(HallMessages.CHALLENGE_RUMOUR, (err, msg) => {
+        });
+        hall.communicationMedium.receive(HallMessages.CHALLENGE_RUMOUR, (err, msg) => {
             if (err) {
                 hall.receiveCommunicationProblemReport(err);
                 return;
@@ -90,16 +77,25 @@ export class Hall {
 
     public sendChallenge(challenge: IChallenge) {
         const hall = this;
-        hall.natsClient.publish(HallMessages.CHALLENGE, JSON.stringify(challenge));
-        hall.natsClient.publish(HallMessages.CHALLENGE_RUMOUR, JSON.stringify(challenge));
+        try {
+            hall.communicationMedium.send(HallMessages.CHALLENGE, JSON.stringify(challenge));
+            hall.communicationMedium.send(HallMessages.CHALLENGE_RUMOUR, JSON.stringify(challenge));
+        } catch (err) {
+            hall.receiveCommunicationProblemReport(err);
+        }
     }
 
     public sendLeaderShout(leaderShout: ILeaderShout) {
         const hall = this;
-        hall.natsClient.publish(HallMessages.LEADER_SHOUT, JSON.stringify(leaderShout));
+        try {
+            hall.communicationMedium.send(HallMessages.LEADER_SHOUT, JSON.stringify(leaderShout));
+        } catch (err) {
+            hall.receiveCommunicationProblemReport(err);
+        }
     }
 
     public receiveCommunicationProblemReport(err: Error) {
+        const hall = this;
         logger.error("Communication Problem reported:");
         logger.error(err);
     }
